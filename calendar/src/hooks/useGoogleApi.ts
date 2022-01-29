@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-// import { loadGoogleScript, initGoogleApi, GApi } from '../lib/googleApis';
-import { loadGoogleScript, initGoogleApi, GApi} from "@common/lib/google-apis"
+import { loadGoogleScript, initGoogleApi, GApi } from '../lib/googleApis';
 
 const useGoogleApi = () => {
     const [state, setState] = useState<GApi>({});
