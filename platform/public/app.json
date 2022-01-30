@@ -5,11 +5,13 @@
         "name": "Widgets",
         "providerUrl": "http://localhost:9000/index.html",
         "uuid": "widgets",
-        "autoShow": true
+        "autoShow": true,
+        "alwaysOnTop": true,
+        "opacity": 0.5
     },
     "runtime": {
         "arguments": "",
-        "version": "stable"
+        "version": "23.96.67.7"
     },
     "shortcut": {
         "company": "OpenFin",

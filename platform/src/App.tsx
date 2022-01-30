@@ -1,4 +1,4 @@
-import { init, getCurrentSync } from "@openfin/workspace-platform";
+import { init, getCurrentSync, Page } from "@openfin/workspace-platform";
 import { useEffect } from "react";
 
 function App() {
@@ -7,58 +7,74 @@ function App() {
     }, []);
     return <div>
         Playground<br />
-        <button onClick={testCreateWindow}>Create Window</button>
-        <button onClick={testCreateView}>Create View</button>
-        <button onClick={testLaunchApp}>Launch App</button>
+        
         </div>;
 }
 
 export default App;
 
+
+const page: Page = {
+    title: 'Widgets',
+    pageId: 'widgets',
+    layout: {
+        content: [
+            {
+                type: 'column',
+                content: [
+                    {
+                        type: 'component',
+                        componentName: 'view',
+                        componentState: {
+                            name: 'calendar',
+                            url: 'https://examples.com'
+                        }
+                    },
+                    {
+                        type: 'component',
+                        componentName: 'view',
+                        componentState: {
+                            name: 'gmail',
+                            url: 'http://yahoo.com'
+                        }
+                    }
+                ]
+            }
+        ]
+    } as any
+}
+
+async function getWindowBounds() {
+    const { primaryMonitor: { monitorRect }} = await fin.System.getMonitorInfo();
+
+    return {
+        defaultHeight: monitorRect.bottom,
+        defaultWidth: 300,
+        defaultLeft: monitorRect.right,
+        defaultTop: 0
+    }
+
+}
+
 async function test() {
     await init({
         browser: {
-            defaultWindowOptions: {
-                workspacePlatform: {
-                    pages: [],
-                    title: 'Test'
-                }
-            }
-        },
-        licenseKey: '',
+
+        }
     });
-}
 
-function testCreateWindow() {
+    
+
+    const windowBounds = await getWindowBounds();
+
     const platform = getCurrentSync();
-    platform.createWindow({});
-}
+    const widgetsWindow = await platform.Browser.createWindow({ ...windowBounds, workspacePlatform: { pages: [page] }});
+    const ofWidgetsWindow = widgetsWindow.openfinWindow;
+   
 
-function testCreateView() {
-  const platform = getCurrentSync();
-  platform.createView({ manifestUrl: "https://openfin-iex.experolabs.com/openfin/manifests/asia-market-overview.json", url: '', target: null } as any)
-}
 
-function testLaunchApp() {
-    const platform = getCurrentSync();
-    // platform.launchApp({ app:  {
-    //     appId: "iex-demo-expero-asia-market-overview",
-    //     title: "Asia Market Overview",
-    //     manifestType: "view",
-    //     publisher: "IEX",
-    //     description:
-    //       "Proin eget lectus mattis, luctus nisi ac, volutpat ex. In volutpat tempus semper. Morbi orci lectus, mattis ut finibus vehicula, sodales non ipsum. Fusce consectetur sem vel eros tempus, vel vehicula leo pulvinar. Aliquam erat volutpat.",
-    //     manifest:
-    //       "https://openfin-iex.experolabs.com/openfin/manifests/asia-market-overview.json",
-    //     contactEmail: "info@openfin.co",
-    //     supportEmail: "info@openfin.co",
-    //     icons: [
-    //       {
-    //         src: "https://iexcloud.io/images/favicon.ico",
-    //         type: "ico",
-    //       },
-    //     ],
-    //     tags: ["Finance", "News"]
-    //   }})
-    platform.launchApp({ app: { appId: '', title: '', icons: [], publisher: '', manifestType:'view', manifest: "https://openfin-iex.experolabs.com/openfin/manifests/asia-market-overview.json"} })
+    window.addEventListener('mouseover', () => {
+        widgetsWindow.openfinWindow.animate({ position: { top: 0, duration: 100, left: 1300}}, { interrupt: false })
+    })
+
 }
