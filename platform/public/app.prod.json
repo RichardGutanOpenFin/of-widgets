@@ -1,0 +1,30 @@
+{
+    "devtools_port": 9090,
+    "licenseKey": "64605fac-add3-48a0-8710-64b38e96a2dd",
+    "platform": {
+        "name": "Widgets",
+        "providerUrl": "https://of-widgets-nhqu4.ondigitalocean.app/index.html",
+        "uuid": "widgets",
+        "autoShow": true,
+        "alwaysOnTop": true,
+        "opacity": 0.05,
+        "frame": false,
+        "resizable": false,
+        "showTaskbarIcon": true,
+        "smallWindow": true,
+        "defaultLeft": -100,
+        "defaultWidth": 3,
+        "defaultHeight": 3,
+        "saveWindowState": false,
+        "minimizable": false
+    },
+    "runtime": {
+        "arguments": "",
+        "version": "23.96.67.7"
+    },
+    "shortcut": {
+        "company": "OpenFin",
+        "name": "Widgets",
+        "icon": "https://of-widgets-nhqu4.ondigitalocean.app/favicon.ico"
+    }
+}
