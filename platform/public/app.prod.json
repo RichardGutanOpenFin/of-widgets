@@ -7,7 +7,7 @@
         "uuid": "widgets",
         "autoShow": true,
         "alwaysOnTop": true,
-        "opacity": 0.05,
+        "opacity": 0.01,
         "frame": false,
         "resizable": false,
         "showTaskbarIcon": true,

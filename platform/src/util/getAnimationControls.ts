@@ -12,7 +12,7 @@ export default async function getAnimationControls(win: OpenFin.Window): Promise
     const fadeIn = async () => {
         await win.animate({ 
             position: { 
-                duration: 250, 
+                duration: 200, 
                 top: windowBounds.defaultTop,
                 left: windowBounds.defaultLeft - windowBounds.defaultWidth
             }
@@ -23,7 +23,7 @@ export default async function getAnimationControls(win: OpenFin.Window): Promise
     const fadeOut = async () => {
         await win.animate({ 
             position: { 
-                duration: 250, 
+                duration: 200, 
                 top: windowBounds.defaultTop,
                 left: windowBounds.defaultLeft
             }

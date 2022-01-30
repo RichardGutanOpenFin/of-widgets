@@ -14,7 +14,8 @@ const page: Page = {
                         componentName: 'view',
                         componentState: {
                             name: 'calendar',
-                            url: 'https://examples.com'
+                            url: 'https://calendar-7es2y.ondigitalocean.app/',
+                            isClosable: false,
                         }
                     },
                     {
@@ -22,12 +23,19 @@ const page: Page = {
                         componentName: 'view',
                         componentState: {
                             name: 'gmail',
-                            url: 'http://yahoo.com'
+                            url: 'https://gmail-ef3sj.ondigitalocean.app',
+                            isClosable: false,
                         }
                     }
                 ]
             }
-        ]
+        ],
+        dimensions: {
+            headerHeight: 0
+        },
+        settings: {
+            hasHeaders: false
+        }
     } as any
 };
 
@@ -38,6 +46,7 @@ export default async function createBrowserWindow() {
         ...windowBounds, 
         alwaysOnTop: true, 
         showTaskbarIcon: false,
+        resizable: false,
         workspacePlatform: { pages: [page] }
     });
     return widgetsWindow.openfinWindow;

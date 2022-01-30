@@ -26,34 +26,33 @@ async function initializePlatform() {
 
     const browserWindow = await createBrowserWindow();
     let { animationPromise, fadeIn, fadeOut } = await getAnimationControls(browserWindow);
+    const helperWindow = await fin.Window.create({ 
+        name: 'fade-out-helper',
+        frame: false,
+        showTaskbarIcon: false,
+        smallWindow: true,
+        resizable: false,
+        alwaysOnTop: true,
+        defaultHeight: windowBounds.defaultHeight, 
+        defaultWidth: windowBounds.defaultLeft - windowBounds.defaultWidth, 
+        defaultTop: 0, 
+        defaultLeft: -windowBounds.defaultLeft,
+        opacity: 0.01,
+        backgroundColor: '#000',
+        saveWindowState: false
+    });
     
 
     window.addEventListener('mouseover', async () => {
         if (!animationPromise) {
-            const helperWindow = await fin.Window.create({ 
-                name: 'fade-out-helper',
-                frame: false,
-                showTaskbarIcon: false,
-                smallWindow: true,
-                resizable: false,
-                alwaysOnTop: true,
-                defaultHeight: windowBounds.defaultHeight, 
-                defaultWidth: 3, 
-                defaultTop: 0, 
-                defaultLeft: -100,
-                opacity: 0.05,
-                saveWindowState: false
-            });
-
             animationPromise = fadeIn();
             await animationPromise;
             animationPromise = null;      
             
-            await helperWindow.resizeTo(5, windowBounds.defaultHeight, 'top-left')
-            await helperWindow.moveTo(windowBounds.defaultLeft - windowBounds.defaultWidth - 5, 0);
+            await helperWindow.moveTo(0, 0);
             helperWindow.getWebWindow().addEventListener('mousemove', async () => {
                 if (!animationPromise) {
-                    await helperWindow.close();
+                    await helperWindow.moveTo(-windowBounds.defaultLeft, 0);
                     animationPromise = fadeOut();
                     await animationPromise;
                     animationPromise = null;
