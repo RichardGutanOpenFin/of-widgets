@@ -43,21 +43,24 @@ async function initializePlatform() {
     });
     
 
-    window.addEventListener('mouseover', async () => {
+    const fadeInListener =  async () => {
         if (!animationPromise) {
             animationPromise = fadeIn();
             await animationPromise;
             animationPromise = null;      
             
             await helperWindow.moveTo(0, 0);
-            helperWindow.getWebWindow().addEventListener('mousemove', async () => {
-                if (!animationPromise) {
-                    await helperWindow.moveTo(-windowBounds.defaultLeft, 0);
-                    animationPromise = fadeOut();
-                    await animationPromise;
-                    animationPromise = null;
-                }
-            });
         }
-    });
+    };
+    window.addEventListener('mouseover', fadeInListener);
+
+    const fadeOutListener = async () => {
+        if (!animationPromise) {
+            await helperWindow.moveTo(-windowBounds.defaultLeft, 0);
+            animationPromise = fadeOut();
+            await animationPromise;
+            animationPromise = null;
+        }
+    }
+    helperWindow.getWebWindow().addEventListener('mousemove', fadeOutListener);
 }
