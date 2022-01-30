@@ -7,7 +7,7 @@ module.exports = {
     devtool: "cheap-module-source-map",
     entry: "./src/index.tsx",
     output: {
-        path: path.resolve(__dirname, "./out"),
+        path: path.resolve(__dirname, "./public"),
         filename: "index.js",
     },
     plugins: [new HtmlWebpackPlugin({ template: "./public/index.html" })],
