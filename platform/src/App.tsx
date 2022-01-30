@@ -1,80 +1,64 @@
-import { init, getCurrentSync, Page } from "@openfin/workspace-platform";
+import { init } from "@openfin/workspace-platform";
 import { useEffect } from "react";
+
+import createBrowserWindow from './util/createBrowserWindow';
+import getWindowBounds from './util/getWindowBounds';
+import getAnimationControls from './util/getAnimationControls'
 
 function App() {
     useEffect(() => {
-        test();
+        initializePlatform();
     }, []);
-    return <div>
-        Playground<br />
-        
-        </div>;
+
+    return null;
 }
 
 export default App;
 
 
-const page: Page = {
-    title: 'Widgets',
-    pageId: 'widgets',
-    layout: {
-        content: [
-            {
-                type: 'column',
-                content: [
-                    {
-                        type: 'component',
-                        componentName: 'view',
-                        componentState: {
-                            name: 'calendar',
-                            url: 'https://examples.com'
-                        }
-                    },
-                    {
-                        type: 'component',
-                        componentName: 'view',
-                        componentState: {
-                            name: 'gmail',
-                            url: 'http://yahoo.com'
-                        }
-                    }
-                ]
-            }
-        ]
-    } as any
-}
+async function initializePlatform() {
+    const windowBounds = await getWindowBounds();
+    const platformWindow = fin.Window.getCurrentSync();
+    platformWindow.resizeTo(3, windowBounds.defaultHeight, 'top-left')
+    platformWindow.moveTo(windowBounds.defaultLeft - 3, 0);
 
-async function getWindowBounds() {
-    const { primaryMonitor: { monitorRect }} = await fin.System.getMonitorInfo();
+    await init({ browser: {} });
 
-    return {
-        defaultHeight: monitorRect.bottom,
-        defaultWidth: 300,
-        defaultLeft: monitorRect.right,
-        defaultTop: 0
-    }
-
-}
-
-async function test() {
-    await init({
-        browser: {
-
-        }
-    });
-
+    const browserWindow = await createBrowserWindow();
+    let { animationPromise, fadeIn, fadeOut } = await getAnimationControls(browserWindow);
     
 
-    const windowBounds = await getWindowBounds();
+    window.addEventListener('mouseover', async () => {
+        if (!animationPromise) {
+            const helperWindow = await fin.Window.create({ 
+                name: 'fade-out-helper',
+                frame: false,
+                showTaskbarIcon: false,
+                smallWindow: true,
+                resizable: false,
+                alwaysOnTop: true,
+                defaultHeight: windowBounds.defaultHeight, 
+                defaultWidth: 3, 
+                defaultTop: 0, 
+                defaultLeft: -100,
+                opacity: 0.05,
+                saveWindowState: false
+            });
 
-    const platform = getCurrentSync();
-    const widgetsWindow = await platform.Browser.createWindow({ ...windowBounds, workspacePlatform: { pages: [page] }});
-    const ofWidgetsWindow = widgetsWindow.openfinWindow;
-   
-
-
-    window.addEventListener('mouseover', () => {
-        widgetsWindow.openfinWindow.animate({ position: { top: 0, duration: 100, left: 1300}}, { interrupt: false })
-    })
-
+            animationPromise = fadeIn();
+            await animationPromise;
+            animationPromise = null;      
+            
+            await helperWindow.resizeTo(5, windowBounds.defaultHeight, 'top-left')
+            await helperWindow.moveTo(windowBounds.defaultLeft - windowBounds.defaultWidth - 5, 0);
+            helperWindow.getWebWindow().addEventListener('mousemove', async () => {
+                if (!animationPromise) {
+                    await helperWindow.close();
+                    animationPromise = fadeOut();
+                    await animationPromise;
+                    animationPromise = null;
+                }
+            });
+        }
+    });
 }

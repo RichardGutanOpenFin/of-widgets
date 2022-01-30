@@ -7,7 +7,16 @@
         "uuid": "widgets",
         "autoShow": true,
         "alwaysOnTop": true,
-        "opacity": 0.5
+        "opacity": 0.05,
+        "frame": false,
+        "resizable": false,
+        "showTaskbarIcon": true,
+        "smallWindow": true,
+        "defaultLeft": -100,
+        "defaultWidth": 3,
+        "defaultHeight": 3,
+        "saveWindowState": false,
+        "minimizable": false
     },
     "runtime": {
         "arguments": "",

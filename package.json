@@ -10,7 +10,7 @@
     "dependencies": {
         "@types/styled-components": "5.1.14",
         "date-fns": "2.24.0",
-        "openfin-adapter": "21.64.9",
+        "openfin-adapter": "23.68.3",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-scripts": "4.0.3",
