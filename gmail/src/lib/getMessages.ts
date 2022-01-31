@@ -12,6 +12,7 @@ export type Message = {
     subject?: string;
     snippet?: string;
     unread?: boolean;
+    date: number
 };
 export default async function getMessages(): Promise<Message[]> {
     const gmail = window.gapi?.client?.gmail;
@@ -23,13 +24,15 @@ export default async function getMessages(): Promise<Message[]> {
             maxResults: 30,
         });
 
-        const mapped = messages?.map((msg) => msg.id) || [];
-        const filtered = mapped.filter(
-            (id: string | undefined): id is string => typeof id === "string"
-        );
-        const messagePromises = filtered.map((id) =>
-            gmail.users.messages.get({ userId: "me", id })
-        );
+        const map = messages?.reduce((acc, curr) => {
+            if (curr.threadId && curr.id && !acc.threads[curr.threadId]) {
+                acc.threads[curr.threadId] = curr.threadId;
+                acc.messageIds.push(curr.id);
+            }
+            return acc
+        }, { threads: {} as Record<string, string>, messageIds: [] as string[] })
+
+        const messagePromises = map?.messageIds.map((id) => gmail.users.messages.get({ userId: "me", id })) || [];
         const messageObjects = await Promise.all(messagePromises);
 
         return messageObjects.map(({ result }) => ({
@@ -41,6 +44,7 @@ export default async function getMessages(): Promise<Message[]> {
             snippet: result.snippet,
             unread: result.labelIds?.includes("UNREAD"),
             id: result.id,
+            date: Number(result.internalDate)
         }));
     }
     return [];
