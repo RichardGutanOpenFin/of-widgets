@@ -17,6 +17,7 @@ export default async function getAnimationControls(win: OpenFin.Window): Promise
                 left: windowBounds.defaultLeft - windowBounds.defaultWidth
             }
         }, { interrupt: true, tween: 'ease-in' });
+        await fin.Window.getCurrentSync().focus();
         await win.focus();
     }
 

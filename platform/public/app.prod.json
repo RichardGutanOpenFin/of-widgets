@@ -10,7 +10,7 @@
         "opacity": 0.01,
         "frame": false,
         "resizable": false,
-        "showTaskbarIcon": true,
+        "showTaskbarIcon": false,
         "smallWindow": true,
         "defaultLeft": -100,
         "defaultWidth": 3,

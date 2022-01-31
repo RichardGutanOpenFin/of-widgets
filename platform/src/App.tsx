@@ -1,4 +1,4 @@
-import { init } from "@openfin/workspace-platform";
+import * as WorkspacePlatform from "@openfin/workspace-platform";
 import { useEffect } from "react";
 
 import createBrowserWindow from './util/createBrowserWindow';
@@ -22,10 +22,15 @@ async function initializePlatform() {
     platformWindow.resizeTo(3, windowBounds.defaultHeight, 'top-left')
     platformWindow.moveTo(windowBounds.defaultLeft - 3, 0);
 
-    await init({ browser: {} });
+    await WorkspacePlatform.init({ browser: {} });
 
     const browserWindow = await createBrowserWindow();
+    browserWindow.addListener('closed', () => {
+        WorkspacePlatform.getCurrentSync().quit();
+    });
+
     let { animationPromise, fadeIn, fadeOut } = await getAnimationControls(browserWindow);
+
     const helperWindow = await fin.Window.create({ 
         name: 'fade-out-helper',
         frame: false,
